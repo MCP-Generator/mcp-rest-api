@@ -1,7 +1,12 @@
 /**
  * Parameter binding and expression parsing utilities
- * Handles {args.param}, {env.VAR}, and {args.param || default} syntax
+ * Handles {args.param}, {env.VAR}, {args.param || default}, and {args.param?} syntax
  */
+
+/**
+ * Special marker to indicate a parameter should be omitted from the request
+ */
+export const OMIT_MARKER = Symbol('OMIT');
 
 export interface ParameterContext {
     args: Record<string, any>;
@@ -12,6 +17,7 @@ export interface ParsedExpression {
     type: 'args' | 'env' | 'literal';
     key?: string;
     defaultValue?: any;
+    optional?: boolean;
     value: any;
 }
 
@@ -21,8 +27,9 @@ export interface ParsedExpression {
  * - {args.paramName}
  * - {env.VAR_NAME}
  * - {args.paramName || defaultValue}
+ * - {args.paramName?} (optional - omit if not provided)
  */
-const EXPRESSION_REGEX = /\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\|\|\s*([^}]+))?\}/g;
+const EXPRESSION_REGEX = /\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\??\s*(?:\|\|\s*([^}]+))?\}/g;
 
 /**
  * Parse and resolve parameter binding expressions
@@ -52,7 +59,11 @@ export class ParameterBinder {
         if (typeof value === 'object' && value !== null) {
             const resolved: Record<string, any> = {};
             for (const [key, val] of Object.entries(value)) {
-                resolved[key] = this.resolve(val);
+                const resolvedVal = this.resolve(val);
+                // Only include the key if the resolved value is not the OMIT_MARKER
+                if (resolvedVal !== OMIT_MARKER) {
+                    resolved[key] = resolvedVal;
+                }
             }
             return resolved;
         }
@@ -66,7 +77,7 @@ export class ParameterBinder {
     private resolveString(value: string): any {
         // If the entire string is a single expression, return the resolved value directly
         const singleExpressionMatch = value.match(
-            /^\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\|\|\s*([^}]+))?\}$/
+            /^\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\??\s*(?:\|\|\s*([^}]+))?\}$/
         );
         if (singleExpressionMatch) {
             const expression = this.parseExpression(singleExpressionMatch);
@@ -76,7 +87,7 @@ export class ParameterBinder {
         // Replace all expressions in the string
         return value.replace(EXPRESSION_REGEX, match => {
             const expressionMatch = match.match(
-                /^\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\|\|\s*([^}]+))?\}$/
+                /^\{(args|env)\.([a-zA-Z_][a-zA-Z0-9_]*)\??\s*(?:\|\|\s*([^}]+))?\}$/
             );
             if (expressionMatch) {
                 const expression = this.parseExpression(expressionMatch);
@@ -90,19 +101,33 @@ export class ParameterBinder {
      * Parse a single parameter expression
      */
     private parseExpression(match: RegExpMatchArray): ParsedExpression {
-        const [, type, key, defaultValue] = match;
+        const fullMatch = match[0];
+        const type = match[1];
+        const key = match[2];
+        const defaultValue = match[3];
+
+        // Check if this is an optional parameter (ends with ?)
+        const isOptional = fullMatch.includes('?');
 
         let value: any;
 
         if (type === 'args') {
             value = this.context.args[key];
-            if (value === undefined && defaultValue !== undefined) {
-                value = this.parseDefaultValue(defaultValue);
+            if (value === undefined) {
+                if (defaultValue !== undefined) {
+                    value = this.parseDefaultValue(defaultValue);
+                } else if (isOptional) {
+                    value = OMIT_MARKER;
+                }
             }
         } else if (type === 'env') {
             value = this.context.env[key];
-            if (value === undefined && defaultValue !== undefined) {
-                value = this.parseDefaultValue(defaultValue);
+            if (value === undefined) {
+                if (defaultValue !== undefined) {
+                    value = this.parseDefaultValue(defaultValue);
+                } else if (isOptional) {
+                    value = OMIT_MARKER;
+                }
             }
         }
 
@@ -110,6 +135,7 @@ export class ParameterBinder {
             type: type as 'args' | 'env',
             key,
             defaultValue: defaultValue ? this.parseDefaultValue(defaultValue) : undefined,
+            optional: isOptional,
             value
         };
     }
@@ -188,11 +214,14 @@ export class ParameterBinder {
         const required: Set<string> = new Set();
 
         for (const expr of expressions) {
-            const match = expr.match(/^\{args\.([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\|\|\s*([^}]+))?\}$/);
+            const match = expr.match(
+                /^\{args\.([a-zA-Z_][a-zA-Z0-9_]*)\??\s*(?:\|\|\s*([^}]+))?\}$/
+            );
             if (match) {
                 const [, key, defaultValue] = match;
-                // Only required if no default value
-                if (defaultValue === undefined) {
+                const isOptional = expr.includes('?');
+                // Only required if no default value and not optional
+                if (defaultValue === undefined && !isOptional) {
                     required.add(key);
                 }
             }
@@ -208,7 +237,9 @@ export class ParameterBinder {
         const envVars: Set<string> = new Set();
 
         for (const expr of expressions) {
-            const match = expr.match(/^\{env\.([a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\|\|\s*([^}]+))?\}$/);
+            const match = expr.match(
+                /^\{env\.([a-zA-Z_][a-zA-Z0-9_]*)\??\s*(?:\|\|\s*([^}]+))?\}$/
+            );
             if (match) {
                 const [, key] = match;
                 envVars.add(key);

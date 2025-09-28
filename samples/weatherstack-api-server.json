@@ -1,0 +1,115 @@
+{
+  "server": {
+    "name": "weatherstack-api-server",
+    "version": "1.0.0",
+    "description": "Weatherstack REST API wrapper optimized for LLM agents to retrieve real-time weather data, historical weather information, and forecasts by location. Agents should invoke this when users ask about current weather conditions, temperature, humidity, wind speed, or other meteorological data for specific cities, countries, or coordinates.\n\nSources:\n- [Weatherstack API Documentation](https://weatherstack.com/documentation) — Official REST API reference"
+  },
+  "api": {
+    "baseUrl": "http://api.weatherstack.com/v1",
+    "timeout": 15000,
+    "headers": {
+      "Accept": "application/json"
+    }
+  },
+  "envs": [
+    {
+      "name": "WEATHERSTACK_API_KEY",
+      "description": "Weatherstack API access key for authentication"
+    }
+  ],
+  "tools": [
+    {
+      "name": "weatherstack_current_weather",
+      "description": "Get current weather conditions for a specific location by city name, country, coordinates, or IP address. Returns temperature, weather description, humidity, wind speed, pressure, visibility, and other real-time meteorological data. Use this when users ask about current weather conditions.",
+      "method": "GET",
+      "path": "/current",
+      "queryParams": {
+        "access_key": "{env.WEATHERSTACK_API_KEY}",
+        "query": "{args.location}",
+        "units": "{args.units?}",
+        "language": "{args.language?}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Location query - can be city name (e.g., 'New York'), city with country (e.g., 'New York, US'), coordinates (e.g., '40.7,-74.0'), or IP address"
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "m",
+              "s",
+              "f"
+            ],
+            "description": "Temperature unit system: 'm' for metric (Celsius), 's' for scientific (Kelvin), 'f' for Fahrenheit",
+            "default": "m"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language code for weather descriptions (e.g., 'en', 'es', 'fr', 'de')",
+            "default": "en"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      }
+    },
+    {
+      "name": "weatherstack_historical_weather",
+      "description": "Retrieve historical weather data for a specific location and date or date range. Returns past weather conditions including temperature, humidity, wind, and precipitation data. Use this when users ask about weather on specific past dates or want historical weather patterns.",
+      "method": "GET",
+      "path": "/historical",
+      "queryParams": {
+        "access_key": "{env.WEATHERSTACK_API_KEY}",
+        "query": "{args.location}",
+        "historical_date": "{args.date}",
+        "historical_date_start": "{args.date_start}",
+        "historical_date_end": "{args.date_end}",
+        "units": "{args.units || 'm'}",
+        "language": "{args.language || 'en'}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "Location query - can be city name, city with country, or coordinates"
+          },
+          "date": {
+            "type": "string",
+            "description": "Single historical date in YYYY-MM-DD format (e.g., '2023-12-25'). Use this for single date queries."
+          },
+          "date_start": {
+            "type": "string",
+            "description": "Start date for historical range in YYYY-MM-DD format. Use with date_end for date ranges."
+          },
+          "date_end": {
+            "type": "string",
+            "description": "End date for historical range in YYYY-MM-DD format. Use with date_start for date ranges."
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "m",
+              "s",
+              "f"
+            ],
+            "description": "Temperature unit system: 'm' for metric (Celsius), 's' for scientific (Kelvin), 'f' for Fahrenheit",
+            "default": "m"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language code for weather descriptions",
+            "default": "en"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      }
+    }
+  ]
+}
