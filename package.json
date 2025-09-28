@@ -1,0 +1,60 @@
+{
+  "name": "mcp-rest-api",
+  "version": "1.0.0",
+  "description": "A CLI tool that serves as an MCP Server for REST API interactions",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-rest-api": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "build-start": "npm run build && npm run start --",
+    "dev": "nodemon --exec \"ts-node src/index.ts\"",
+    "dev:config": "nodemon --exec \"ts-node src/index.ts --config samples-config/pagerduty-api-server.json\"",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:fix": "npm run format && npm run lint:fix",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "fix": "npm run format:fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:global": "npm run build && npm install -g .",
+    "uninstall:global": "npm uninstall -g mcp-rest-api",
+    "reinstall:global": "npm run uninstall:global && npm run install:global"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "rest-api",
+    "cli",
+    "tool"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/commander": "^2.12.0",
+    "@types/node": "^24.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-promise": "^7.2.1",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.2",
+    "axios": "^1.12.2",
+    "commander": "^14.0.1"
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "server": {
+    "name": "pagerduty-api-server",
+    "version": "1.0.0",
+    "description": "PagerDuty REST API wrapper optimized for LLM agents to retrieve organizational data including users, teams, on-call schedules, and escalation policies. Use this when you need to understand who's on-call, team structures, or user contact information for incident response and team coordination."
+  },
+  "api": {
+    "baseUrl": "https://api.pagerduty.com",
+    "timeout": 30000,
+    "headers": {
+      "Accept": "application/vnd.pagerduty+json;version=2",
+      "Content-Type": "application/json",
+      "Authorization": "Token token={env.PAGERDUTY_API_TOKEN}"
+    }
+  },
+  "tools": [
+    {
+      "name": "pagerduty_users_list",
+      "description": "List all users in the PagerDuty account. Use this to discover team members, get user IDs for other operations, or find contact information. Supports filtering by team and query string for name/email searches.",
+      "method": "GET",
+      "path": "/users",
+      "queryParams": {
+        "limit": "{args.limit || 25}",
+        "offset": "{args.offset || 0}",
+        "query": "{args.query}",
+        "team_ids[]": "{args.team_ids}",
+        "include[]": "contact_methods,notification_rules"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page (max 100)",
+            "maximum": 100,
+            "minimum": 1,
+            "default": 25
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Starting point for pagination",
+            "minimum": 0,
+            "default": 0
+          },
+          "query": {
+            "type": "string",
+            "description": "Search query to filter users by name or email"
+          },
+          "team_ids": {
+            "type": "string",
+            "description": "Comma-separated list of team IDs to filter users by team membership"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "pagerduty_user_get",
+      "description": "Get detailed information about a specific user including contact methods, notification rules, and team memberships. Use when you need complete user profile data.",
+      "method": "GET",
+      "path": "/users/{id}",
+      "pathParams": {
+        "id": "{args.user_id}"
+      },
+      "queryParams": {
+        "include[]": "contact_methods,notification_rules,teams"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "The ID of the user to retrieve"
+          }
+        },
+        "required": [
+          "user_id"
+        ]
+      }
+    },
+    {
+      "name": "pagerduty_teams_list",
+      "description": "List all teams in the PagerDuty account. Use this to understand team structure, get team IDs for filtering other queries, or discover team hierarchies.",
+      "method": "GET",
+      "path": "/teams",
+      "queryParams": {
+        "limit": "{args.limit || 25}",
+        "offset": "{args.offset || 0}",
+        "query": "{args.query}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page (max 100)",
+            "maximum": 100,
+            "minimum": 1,
+            "default": 25
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Starting point for pagination",
+            "minimum": 0,
+            "default": 0
+          },
+          "query": {
+            "type": "string",
+            "description": "Search query to filter teams by name"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "pagerduty_team_get",
+      "description": "Get detailed information about a specific team including members and associated escalation policies. Use when you need complete team details and member lists.",
+      "method": "GET",
+      "path": "/teams/{id}",
+      "pathParams": {
+        "id": "{args.team_id}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "string",
+            "description": "The ID of the team to retrieve"
+          }
+        },
+        "required": [
+          "team_id"
+        ]
+      }
+    },
+    {
+      "name": "pagerduty_schedules_list",
+      "description": "List all on-call schedules. Use this to discover available schedules, get schedule IDs for detailed queries, or understand the overall on-call structure.",
+      "method": "GET",
+      "path": "/schedules",
+      "queryParams": {
+        "limit": "{args.limit || 25}",
+        "offset": "{args.offset || 0}",
+        "query": "{args.query}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page (max 100)",
+            "maximum": 100,
+            "minimum": 1,
+            "default": 25
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Starting point for pagination",
+            "minimum": 0,
+            "default": 0
+          },
+          "query": {
+            "type": "string",
+            "description": "Search query to filter schedules by name"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "pagerduty_schedule_get",
+      "description": "Get detailed information about a specific schedule including current and upcoming on-call assignments. Use this to see who's currently on-call and rotation details.",
+      "method": "GET",
+      "path": "/schedules/{id}",
+      "pathParams": {
+        "id": "{args.schedule_id}"
+      },
+      "queryParams": {
+        "since": "{args.since}",
+        "until": "{args.until}",
+        "time_zone": "{args.time_zone || 'UTC'}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "schedule_id": {
+            "type": "string",
+            "description": "The ID of the schedule to retrieve"
+          },
+          "since": {
+            "type": "string",
+            "description": "ISO 8601 timestamp for start of time range (defaults to now)"
+          },
+          "until": {
+            "type": "string",
+            "description": "ISO 8601 timestamp for end of time range (defaults to now + 1 day)"
+          },
+          "time_zone": {
+            "type": "string",
+            "description": "Time zone for schedule display",
+            "default": "UTC"
+          }
+        },
+        "required": [
+          "schedule_id"
+        ]
+      }
+    },
+    {
+      "name": "pagerduty_oncalls_list",
+      "description": "List current on-call assignments across all schedules or filter by specific criteria. Use this to quickly see who's currently on-call without needing to check individual schedules.",
+      "method": "GET",
+      "path": "/oncalls",
+      "queryParams": {
+        "limit": "{args.limit || 25}",
+        "offset": "{args.offset || 0}",
+        "time_zone": "{args.time_zone || 'UTC'}",
+        "include[]": "users,schedules",
+        "schedule_ids[]": "{args.schedule_ids}",
+        "user_ids[]": "{args.user_ids}",
+        "escalation_policy_ids[]": "{args.escalation_policy_ids}",
+        "since": "{args.since}",
+        "until": "{args.until}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page (max 100)",
+            "maximum": 100,
+            "minimum": 1,
+            "default": 25
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Starting point for pagination",
+            "minimum": 0,
+            "default": 0
+          },
+          "time_zone": {
+            "type": "string",
+            "description": "Time zone for on-call times",
+            "default": "UTC"
+          },
+          "schedule_ids": {
+            "type": "string",
+            "description": "Comma-separated list of schedule IDs to filter by"
+          },
+          "user_ids": {
+            "type": "string",
+            "description": "Comma-separated list of user IDs to filter by"
+          },
+          "escalation_policy_ids": {
+            "type": "string",
+            "description": "Comma-separated list of escalation policy IDs to filter by"
+          },
+          "since": {
+            "type": "string",
+            "description": "ISO 8601 timestamp for start of time range (defaults to now)"
+          },
+          "until": {
+            "type": "string",
+            "description": "ISO 8601 timestamp for end of time range (defaults to now)"
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "server": {
+    "name": "hackernews-api-server",
+    "version": "1.0.0",
+    "description": "Hacker News Firebase API wrapper optimized for LLMs to retrieve stories, comments, and user data. Invoke when needing current tech news, trending discussions, or community insights from Hacker News."
+  },
+  "api": {
+    "baseUrl": "https://hacker-news.firebaseio.com/v0",
+    "timeout": 15000,
+    "headers": {
+      "Accept": "application/json"
+    }
+  },
+  "tools": [
+    {
+      "name": "hn_item_get",
+      "description": "Fetch any Hacker News item (story, comment, job, poll) by ID. Use this to get detailed information about a specific item including title, text, author, score, and metadata.",
+      "method": "GET",
+      "path": "/item/{id}.json",
+      "pathParams": {
+        "id": "{args.id}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Hacker News item ID (story, comment, job, poll, etc.)"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "name": "hn_user_get",
+      "description": "Retrieve user profile information including karma, creation date, submitted stories, and comments. Use to get author details or user activity.",
+      "method": "GET",
+      "path": "/user/{username}.json",
+      "pathParams": {
+        "username": "{args.username}"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Hacker News username"
+          }
+        },
+        "required": [
+          "username"
+        ]
+      }
+    },
+    {
+      "name": "hn_top_stories",
+      "description": "Get list of current top story IDs (up to 500). These are the most upvoted stories currently on the front page. Use with hn_item_get to fetch full story details.",
+      "method": "GET",
+      "path": "/topstories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_new_stories",
+      "description": "Get list of newest story IDs (up to 500). These are recently submitted stories in chronological order. Use with hn_item_get to fetch full story details.",
+      "method": "GET",
+      "path": "/newstories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_best_stories",
+      "description": "Get list of best story IDs (up to 500). These are top-scoring stories over a longer time period. Use with hn_item_get to fetch full story details.",
+      "method": "GET",
+      "path": "/beststories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_ask_stories",
+      "description": "Get list of Ask HN story IDs (up to 200). These are community discussion posts where users ask questions. Use with hn_item_get to fetch full story details.",
+      "method": "GET",
+      "path": "/askstories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_show_stories",
+      "description": "Get list of Show HN story IDs (up to 200). These are posts where users showcase their projects, products, or creations. Use with hn_item_get to fetch full story details.",
+      "method": "GET",
+      "path": "/showstories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_job_stories",
+      "description": "Get list of job posting IDs (up to 200). These are hiring posts and job opportunities. Use with hn_item_get to fetch full job posting details.",
+      "method": "GET",
+      "path": "/jobstories.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_max_item",
+      "description": "Get the current largest item ID. Useful for pagination or determining the most recent item number in the system.",
+      "method": "GET",
+      "path": "/maxitem.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "hn_updates",
+      "description": "Get recently changed items and profiles. Returns IDs of items and usernames that have been updated recently. Use for monitoring changes.",
+      "method": "GET",
+      "path": "/updates.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  ]
+}
