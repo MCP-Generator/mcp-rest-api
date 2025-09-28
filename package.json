@@ -6,8 +6,13 @@
   "bin": {
     "mcp-rest-api": "./dist/index.js"
   },
+  "files": [
+    "dist/**/*",
+    "samples/**/*",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/index.js",
     "start": "node dist/index.js",
     "build-start": "npm run build && npm run start --",
     "dev": "nodemon --exec \"ts-node src/index.ts\"",
@@ -21,6 +26,7 @@
     "check": "npm run typecheck && npm run lint && npm run format:check",
     "fix": "npm run format:fix",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postbuild": "chmod +x dist/index.js",
     "install:global": "npm run build && npm install -g .",
     "uninstall:global": "npm uninstall -g mcp-rest-api",
     "reinstall:global": "npm run uninstall:global && npm run install:global"

@@ -30,7 +30,11 @@ mcp-rest-api --config /path/to/your/config.json
 
 ### Using npx (Recommended)
 ```bash
+# From npm registry (once published)
 npx mcp-rest-api --config /path/to/your/config.json
+
+# Directly from GitHub
+npx -y github:MCP-Generator/mcp-rest-api --config /path/to/your/config.json
 ```
 
 ### Clone & Build
