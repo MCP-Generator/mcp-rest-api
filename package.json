@@ -2,9 +2,9 @@
   "name": "mcp-rest-api",
   "version": "0.0.1",
   "description": "A CLI tool that serves as an MCP Server for REST API interactions",
-  "main": "dist/index.js",
+  "main": "dist/cli.js",
   "bin": {
-    "mcp-rest-api": "./dist/index.js"
+    "mcp-rest-api": "./dist/cli.js"
   },
   "files": [
     "dist/**/*",
