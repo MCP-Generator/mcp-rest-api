@@ -27,6 +27,7 @@
     "fix": "npm run format:fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postbuild": "chmod +x dist/index.js",
+    "postinstall": "npm run build",
     "install:global": "npm run build && npm install -g .",
     "uninstall:global": "npm uninstall -g mcp-rest-api",
     "reinstall:global": "npm run uninstall:global && npm run install:global"
