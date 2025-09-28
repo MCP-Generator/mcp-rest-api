@@ -107,7 +107,4 @@ process.on('unhandledRejection', (reason, promise) => {
     process.exit(1);
 });
 
-// Run the CLI if this file is executed directly
-if (require.main === module) {
-    main();
-}
+main();
