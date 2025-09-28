@@ -17,7 +17,7 @@ export function createCliParser(): Command {
     program
         .name('mcp-rest-api')
         .description('A CLI tool that serves as an MCP Server for REST API interactions')
-        .version('1.0.0')
+        .version('0.0.5')
         .requiredOption('-c, --config <path>', 'JSON config file path or URL')
         .option(
             '-l, --log <destination>',
