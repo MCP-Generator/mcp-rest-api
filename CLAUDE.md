@@ -76,7 +76,7 @@ The system follows a **three-layer architecture** that transforms JSON configura
 - **`ParameterBinding.ts`**: Handles `{args.param}` and `{env.VAR}` expression parsing
 - **`ValidationSchemas.ts`**: Comprehensive runtime validation
 
-### 2. MCP Server Layer (`src/mcp/`)
+### 2. MCP Server Layer (`src/server/`)
 - **`McpServer.ts`**: Main MCP protocol server implementation using Anthropic's MCP SDK
 - **`ToolRegistry.ts`**: Dynamically registers JSON-defined tools as MCP tools
 - **`RequestHandler.ts`**: Executes HTTP requests with parameter binding and error handling

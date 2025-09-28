@@ -3,7 +3,7 @@
 import { parseCliArguments } from './cli';
 import { fetchConfig } from './config-fetcher';
 import { loadAndParseMcpConfig } from './config-parser';
-import { McpServer } from './mcp/McpServer';
+import { McpServer } from './server/McpServer';
 import { Logger } from './utils/Logger';
 
 async function main(): Promise<void> {
