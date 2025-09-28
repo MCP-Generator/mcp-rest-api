@@ -3,9 +3,9 @@
  */
 
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { ToolDefinition, McpServerConfig } from '../types/McpConfig';
-import { RequestHandler, RequestContext } from './RequestHandler';
-import { Logger } from '../utils/Logger';
+import { ToolDefinition, McpServerConfig } from '../types/McpConfig.js';
+import { RequestHandler, RequestContext } from './RequestHandler.js';
+import { Logger } from '../utils/Logger.js';
 
 export interface RegisteredTool {
     definition: ToolDefinition;

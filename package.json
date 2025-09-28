@@ -1,22 +1,23 @@
 {
   "name": "mcp-rest-api",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "A CLI tool that serves as an MCP Server for REST API interactions",
-  "main": "dist/cli.js",
+  "main": "build/cli.js",
+  "type": "module",
   "bin": {
-    "mcp-rest-api": "./dist/cli.js"
+    "mcp-rest-api": "./build/cli.js"
   },
   "files": [
-    "dist/**/*",
+    "build/**/*",
     "samples/**/*",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc && chmod +x dist/index.js",
-    "start": "node dist/index.js",
+    "build": "tsc && chmod +x build/cli.js",
+    "start": "node build/cli.js",
     "build-start": "npm run build && npm run start --",
-    "dev": "nodemon --exec \"ts-node src/index.ts\"",
-    "dev:config": "nodemon --exec \"ts-node src/index.ts --config samples-config/pagerduty-api-server.json\"",
+    "dev": "nodemon --exec \"ts-node src/cli.ts\"",
+    "dev:config": "nodemon --exec \"ts-node src/cli.ts --config samples-config/pagerduty-api-server.json\"",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "typecheck": "tsc --noEmit",
@@ -26,7 +27,7 @@
     "check": "npm run typecheck && npm run lint && npm run format:check",
     "fix": "npm run format:fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postbuild": "chmod +x dist/index.js",
+    "postbuild": "chmod +x build/cli.js",
     "prepublishOnly": "npm run check && npm run build",
     "postinstall": "npm run build",
     "install:global": "npm run build && npm install -g .",
@@ -73,7 +74,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
-  "type": "commonjs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.2",
     "axios": "^1.12.2",

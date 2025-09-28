@@ -3,9 +3,9 @@
  */
 
 import axios from 'axios';
-import { ApiConfiguration, ToolDefinition } from '../types/McpConfig';
-import { ParameterBinder, ParameterBindingError } from '../types/ParameterBinding';
-import { Logger } from '../utils/Logger';
+import { ApiConfiguration, ToolDefinition } from '../types/McpConfig.js';
+import { ParameterBinder, ParameterBindingError } from '../types/ParameterBinding.js';
+import { Logger } from '../utils/Logger.js';
 import AxiosInstance = Axios.AxiosInstance;
 
 export interface RequestContext {

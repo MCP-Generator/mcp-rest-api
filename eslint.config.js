@@ -1,7 +1,9 @@
-const tseslint = require('@typescript-eslint/eslint-plugin');
-const tsparser = require('@typescript-eslint/parser');
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+import prettier from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 
-module.exports = [
+export default [
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -13,7 +15,7 @@ module.exports = [
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      prettier: require('eslint-plugin-prettier')
+      prettier: prettier
     },
     rules: {
       // TypeScript specific rules
@@ -40,11 +42,11 @@ module.exports = [
     }
   },
   // Prettier config to disable conflicting rules
-  require('eslint-config-prettier'),
+  prettierConfig,
   {
     ignores: [
       'node_modules/**',
-      'dist/**',
+      'build/**',
       '*.d.ts'
     ]
   }

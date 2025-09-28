@@ -2,8 +2,13 @@
  * JSON Schema validation utilities and enhanced validation functions
  */
 
-import {McpConfigValidationError, validateApiConfiguration, validateServerMetadata, validateToolDefinition} from './McpConfig';
-import {ParameterBinder} from "./ParameterBinding";
+import {
+    McpConfigValidationError,
+    validateApiConfiguration,
+    validateServerMetadata,
+    validateToolDefinition
+} from './McpConfig.js';
+import { ParameterBinder } from './ParameterBinding.js';
 
 /**
  * Comprehensive validation result

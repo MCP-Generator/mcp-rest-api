@@ -1,6 +1,6 @@
-import { isMcpServerConfig, McpServerConfig } from './types/McpConfig';
-import { createValidationError, validateMcpConfig } from './types/ValidationSchemas';
-import { Logger } from './utils/Logger';
+import { isMcpServerConfig, McpServerConfig } from './types/McpConfig.js';
+import { createValidationError, validateMcpConfig } from './types/ValidationSchemas.js';
+import { Logger } from './utils/Logger.js';
 
 export function parseJsonConfig(configContent: string): any {
     try {

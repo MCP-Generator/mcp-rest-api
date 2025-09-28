@@ -10,10 +10,10 @@ import {
     ListToolsRequestSchema,
     McpError
 } from '@modelcontextprotocol/sdk/types.js';
-import { McpServerConfig } from '../types/McpConfig';
-import { RequestHandler } from './RequestHandler';
-import { ToolRegistry } from './ToolRegistry';
-import { Logger } from '../utils/Logger';
+import { McpServerConfig } from '../types/McpConfig.js';
+import { RequestHandler } from './RequestHandler.js';
+import { ToolRegistry } from './ToolRegistry.js';
+import { Logger } from '../utils/Logger.js';
 
 /**
  * Generic MCP Server that loads REST API configurations
