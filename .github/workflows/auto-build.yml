@@ -32,7 +32,7 @@ jobs:
     - name: Check for changes in dist/
       id: check_changes
       run: |
-        git add dist/
+        git add -f dist/  # Force add in case of .gitignore
         if git diff --staged --quiet; then
           echo "changes=false" >> $GITHUB_OUTPUT
         else
@@ -44,7 +44,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action [Auto-build]"
-        git add dist/
+        git add -f dist/  # Force add in case of .gitignore
         git commit -m "Auto-build: Update compiled dist/ files
 
         Built from commit ${{ github.sha }}
