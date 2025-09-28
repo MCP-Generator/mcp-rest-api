@@ -1,6 +1,6 @@
 {
   "name": "mcp-rest-api",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A CLI tool that serves as an MCP Server for REST API interactions",
   "main": "./build/cli.js",
   "type": "module",
