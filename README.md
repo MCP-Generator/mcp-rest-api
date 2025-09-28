@@ -3,12 +3,19 @@
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![npm version](https://img.shields.io/npm/v/mcp-rest-api.svg)](https://www.npmjs.com/package/mcp-rest-api)
 
-> 🔧 **A powerful, type-safe, configurable tool** that transforms any REST API into MCP (Model Context Protocol) tools for LLM agents
+> 🔧 **A powerful, type-safe, configurable CLI tool** that transforms any REST API into MCP (Model Context Protocol) tools for LLM agents
 
 ## 🌟 What is this?
 
 The **MCP REST API Server** is a generic bridge that allows you to wrap **any REST API** and expose it as callable tools for AI assistants and LLM agents through the Model Context Protocol. Simply provide a JSON configuration file, and your API becomes instantly accessible to AI tools!
+
+**✨ The easiest way to get started is with `npx -y mcp-rest-api`** - no installation required!
+
+## 🤖 AI-Powered Config Generator
+
+**🚀 NEW: Generate configs instantly with AI!** Visit [**api-mcp-generator.vercel.app**](https://api-mcp-generator.vercel.app/) to automatically generate JSON configurations from any REST API documentation. Just paste your API docs and let AI create the perfect MCP config for you!
 
 ### 🎯 Key Features
 
@@ -19,156 +26,59 @@ The **MCP REST API Server** is a generic bridge that allows you to wrap **any RE
 - 🚀 **CLI Ready** - Install globally or use with npx
 - 🔧 **Developer Friendly** - Hot reload, linting, and comprehensive tooling
 - 🌍 **Environment Aware** - Seamless environment variable integration
+- 📋 **Flexible Logging** - Silent, console, or file-based logging options
+- ✅ **Robust Validation** - Comprehensive config validation with helpful error messages
 
-## 📦 Installation
+## 📦 Installation & Usage
 
-### Global Installation
+1. **Visit**: [**api-mcp-generator.vercel.app**](https://api-mcp-generator.vercel.app/)
+2. **Input**: Describe your REST API by pasting the url/documentation test in prompt
+3. **Generate**: AI analyzes the docs and creates a perfect JSON configuration
+4. **Copy & Run**: Copy MCP configuration and use it in your preferred AI tool (claude code, cursor, windsurf etc.)  
+
+✨ **Perfect for**: Any API with existing documentation - the AI understands various API doc formats and generates comprehensive, production-ready configurations.
+
+
+### 🚀 Quick Start with npx (Recommended)
+```bash
+# Run directly without installation (most convenient)
+npx -y mcp-rest-api --config /path/to/your/config.json
+
+# The -y flag skips confirmation prompts for faster execution
+```
+
+### Global Installation (Alternative)
 ```bash
 npm install -g mcp-rest-api
 mcp-rest-api --config /path/to/your/config.json
 ```
 
-### Using npx (Recommended)
+### Development Setup
 ```bash
-# From npm registry (once published)
-npx mcp-rest-api --config /path/to/your/config.json
-
-# Directly from GitHub
-npx -y github:MCP-Generator/mcp-rest-api --config /path/to/your/config.json
-```
-
-### Clone & Build
-```bash
-git clone <your-repo-url>
+git clone https://github.com/MCP-Generator/mcp-rest-api.git
 cd mcp-rest-api
 npm install
 npm run build
 ```
 
-## 🚀 Quick Start
 
-### 1. Create Your API Configuration
-
-Create a JSON config file (e.g., `my-api-config.json`):
-
-```json
-{
-  "server": {
-    "name": "my-awesome-api",
-    "version": "1.0.0",
-    "description": "My API wrapper for LLM agents"
-  },
-  "api": {
-    "baseUrl": "https://api.example.com",
-    "timeout": 30000,
-    "headers": {
-      "Authorization": "Bearer {env.API_TOKEN}",
-      "Content-Type": "application/json"
-    }
-  },
-  "tools": [
-    {
-      "name": "users_get",
-      "description": "Get user information by ID",
-      "method": "GET",
-      "path": "/users/{id}",
-      "pathParams": {
-        "id": "{args.user_id}"
-      },
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "user_id": {
-            "type": "string",
-            "description": "The user ID to fetch"
-          }
-        },
-        "required": ["user_id"]
-      }
-    }
-  ]
-}
-```
-
-### 2. Set Environment Variables
+### CLI Options
 ```bash
-export API_TOKEN="your-secret-token-here"
+# Required: Specify configuration file
+npx -y mcp-rest-api --config /path/to/config.json
+
+# Optional: Control logging output
+npx -y mcp-rest-api --config config.json --log stdio        # Log to console
+npx -y mcp-rest-api --config config.json --log /path/file   # Log to file
+npx -y mcp-rest-api --config config.json --log none        # No logging (default)
 ```
 
-### 3. Run the Server
-```bash
-npx mcp-rest-api --config my-api-config.json
-```
+## 🚀 Two Ways to Create Configuration
 
-🎉 **That's it!** Your API is now available as MCP tools!
 
-## 📋 Sample Configurations
+### ✍️ Method 2: Manual Configuration
 
-We provide ready-to-use examples in the `samples/` directory:
-
-### 🚨 PagerDuty API
-```bash
-export PAGERDUTY_API_TOKEN="your-token"
-npm run dev:config
-# or
-npx mcp-rest-api --config samples/pagerduty-api-server.json
-```
-
-### 📰 Hacker News API
-```bash
-npx mcp-rest-api --config samples/hackernews-api-server.json
-```
-
-## ⚡ Development Workflow
-
-### Essential Commands
-
-| Command | Description | Usage |
-|---------|-------------|--------|
-| `npm run dev` | 🔥 Development with hot reload | Start coding |
-| `npm run build` | 🔨 Compile TypeScript | Before deployment |
-| `npm run start` | ▶️ Run compiled server | Production mode |
-| `npm run lint` | 🔍 Check code quality | Code review |
-| `npm run typecheck` | ✅ Type validation | Catch type errors |
-
-### Development Commands
-```bash
-# Start development server with hot reload
-npm run dev
-
-# Development with sample PagerDuty config
-npm run dev:config
-
-# Build and start in one command
-npm run build-start -- --config /path/to/config.json
-```
-
-### Code Quality
-```bash
-# Check everything
-npm run check
-
-# Fix formatting and linting issues
-npm run fix
-
-# Individual commands
-npm run lint           # ESLint check
-npm run lint:fix       # Auto-fix linting issues
-npm run typecheck      # TypeScript validation
-npm run format         # Prettier formatting
-```
-
-### Global Installation Management
-```bash
-# Install as global command
-npm run install:global
-
-# Uninstall global command
-npm run uninstall:global
-
-# Reinstall (useful after changes)
-npm run reinstall:global
-```
+Create a JSON config file manually for full control. See the [Configuration Deep Dive](#-configuration-deep-dive) section below for detailed examples and parameter binding options.
 
 ## 🏗️ Architecture Overview
 
@@ -176,20 +86,13 @@ The system follows a clean **three-layer architecture**:
 
 ```
 ┌─────────────────────────┐
-│   🎯 CLI/Config Layer   │  ← Entry point & config loading
+│   🎯 CLI/Config Layer   │  ← Entry point & config loading (cli.ts)
 ├─────────────────────────┤
-│   🔧 MCP Server Layer   │  ← Protocol implementation & tool registry
+│   🔧 MCP Server Layer   │  ← Protocol implementation & tool registry (McpServer.ts)
 ├─────────────────────────┤
-│   📡 HTTP Client Layer  │  ← REST API communication & parameter binding
+│   📡 HTTP Client Layer  │  ← REST API communication & parameter binding (RequestHandler.ts)
 └─────────────────────────┘
 ```
-
-### Key Components
-
-- **📋 Configuration Layer** (`src/types/`) - Type-safe config interfaces & validation
-- **🔌 MCP Server Layer** (`src/server/`) - Protocol server & dynamic tool registration
-- **🌐 HTTP Client Layer** - Request handling with smart parameter binding
-- **⚙️ CLI Layer** (`src/`) - Command-line interface & config loading
 
 ## 🔧 Configuration Deep Dive
 
@@ -212,39 +115,6 @@ The system supports powerful expression binding:
 }
 ```
 
-### Tool Naming Convention 📛
-
-Follow the pattern: `{service}_{resource}_{action}`
-
-**Examples:**
-- `pagerduty_users_list`
-- `github_repos_get`
-- `slack_messages_send`
-- `jira_issues_create`
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**🚫 "Config file not found"**
-```bash
-# Use absolute paths
-npx mcp-rest-api --config /full/path/to/config.json
-```
-
-**🔑 "Environment variable not set"**
-```bash
-# Check your environment variables
-echo $API_TOKEN
-export API_TOKEN="your-token-here"
-```
-
-**📡 "Request failed"**
-- Verify API base URL is correct
-- Check authentication token/headers
-- Ensure API endpoint paths are valid
-- Review rate limits and timeouts
-
 ## 🤝 Contributing
 
 1. 🍴 Fork the repository
@@ -264,6 +134,18 @@ This project is licensed under the ISC License.
 
 **🎯 Transform any REST API into AI-ready tools with just JSON configuration!**
 
+**✨ Get started in seconds:** Generate configs with AI at [api-mcp-generator.vercel.app](https://api-mcp-generator.vercel.app/) → `npx -y mcp-rest-api --config your-config.json`
+
 Made with ❤️ for the LLM community
 
 </div>
+
+## 🎯 Why Use This Tool?
+
+- **🤖 AI-Powered Generation**: Use [api-mcp-generator.vercel.app](https://api-mcp-generator.vercel.app/) to generate configs from API docs instantly
+- **🚀 Zero Installation Required**: Use `npx -y mcp-rest-api` to run immediately
+- **⚡ Instant Setup**: From REST API to AI tool in minutes, not hours
+- **🔧 No Coding**: Pure JSON configuration - no programming required
+- **🌐 Universal**: Works with any REST API (PagerDuty, GitHub, Slack, custom APIs)
+- **🛡️ Production Ready**: Type-safe, validated, with proper error handling
+- **🔍 MCP Standard**: Full Model Context Protocol compliance for maximum compatibility
