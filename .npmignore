@@ -1,0 +1,45 @@
+# Development files
+src/
+.github/
+.internal/
+docs/
+test-config.json
+.claude/
+.idea/
+
+# Build artifacts (keep dist/ for publishing)
+node_modules/
+logs/
+
+# Development configuration
+.prettierrc.json
+.prettierignore
+eslint.config.js
+tsconfig.json
+nodemon.json
+
+# Git and version control
+.git/
+.gitignore
+
+# Environment and local files
+.env
+.env.local
+*.log
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+*.test.js
+*.spec.js
+
+# Documentation that's not needed in package
+CLAUDE.md
